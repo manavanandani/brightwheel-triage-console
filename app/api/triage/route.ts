@@ -140,12 +140,6 @@ function buildMockResponse(subject: string, body: string): TriageResult {
   if (isMisdirectedSales) {
     return { category: "Misdirected - Sales Inquiry", priority: "P3", suggested_owner: "Sales Team", escalation_required: false, human_review_required: false, confidence: 0.91, reasoning: "[DEMO MODE] Sales inquiry from a prospective school — not an existing onboarding customer.", recommended_next_action: "Route to Sales Team to schedule a demo.", draft_reply: "Hi,\n\nThank you for your interest in Brightwheel! You've reached our onboarding team. I'll pass your message along to our sales team who will be in touch shortly.\n\nBrightwheel Team" };
   }
-  if (isVague) {
-    return { category: "Ambiguous - Vague", priority: "P2", suggested_owner: "Onboarding Specialist (Needs Clarification)", escalation_required: false, human_review_required: true, confidence: 0.6, reasoning: "[DEMO MODE] Message is too vague to classify. Clarification needed before routing.", recommended_next_action: "Reply to ask for specific details about the issue.", draft_reply: "Hi Robert,\n\nThank you for reaching out. To make sure we get you the right help, could you share a bit more detail about the issue you're experiencing?\n\nBrightwheel Onboarding Team" };
-  }
-  if (isLowSignal) {
-    return { category: "Low Signal - Follow-Up", priority: "P3", suggested_owner: "Onboarding Specialist", escalation_required: false, human_review_required: false, confidence: 0.92, reasoning: "[DEMO MODE] Follow-up message with no new information.", recommended_next_action: "Check original message thread and respond with an update.", draft_reply: "Hi Sandra,\n\nThank you for following up — I'm looking into your earlier message and will get back to you shortly.\n\nBrightwheel Onboarding Team" };
-  }
   if (isUpsell) {
     return { category: "Upsell / Expansion Opportunity", priority: "P2", suggested_owner: "Sales / Account Manager", escalation_required: false, human_review_required: false, confidence: 0.89, reasoning: "[DEMO MODE] Existing happy customer wants to add billing module before summer enrollment.", recommended_next_action: "Route to Sales/Account Manager to enable the billing module by May 15th.", draft_reply: "Hi Christine,\n\nThat's wonderful to hear — we love that you're loving Brightwheel! I'm connecting you with your Account Manager who will walk you through enabling parent billing in time for your May 15th goal.\n\nBrightwheel Onboarding Team" };
   }
@@ -184,6 +178,12 @@ function buildMockResponse(subject: string, body: string): TriageResult {
   }
   if (isSetupStaff) {
     return { category: "Setup - Staff Management", priority: "P3", suggested_owner: "Onboarding Specialist", escalation_required: false, human_review_required: false, confidence: 0.87, reasoning: "[DEMO MODE] General staff setup question for a new onboarding customer.", recommended_next_action: "Route to Onboarding Specialist. Walk through staff invitation and classroom assignment.", draft_reply: "Hi Sandra,\n\nWelcome to Brightwheel! Adding your teaching staff is straightforward — your Onboarding Specialist will be in touch to walk you through the steps.\n\nBrightwheel Onboarding Team" };
+  }
+  if (isVague) {
+    return { category: "Ambiguous - Vague", priority: "P2", suggested_owner: "Onboarding Specialist (Needs Clarification)", escalation_required: false, human_review_required: true, confidence: 0.6, reasoning: "[DEMO MODE] Message is too vague to classify. Clarification needed before routing.", recommended_next_action: "Reply to ask for specific details about the issue.", draft_reply: "Hi Robert,\n\nThank you for reaching out. To make sure we get you the right help, could you share a bit more detail about the issue you're experiencing?\n\nBrightwheel Onboarding Team" };
+  }
+  if (isLowSignal) {
+    return { category: "Low Signal - Follow-Up", priority: "P3", suggested_owner: "Onboarding Specialist", escalation_required: false, human_review_required: false, confidence: 0.92, reasoning: "[DEMO MODE] Follow-up message with no new information.", recommended_next_action: "Check original message thread and respond with an update.", draft_reply: "Hi Sandra,\n\nThank you for following up — I'm looking into your earlier message and will get back to you shortly.\n\nBrightwheel Onboarding Team" };
   }
 
   // Default fallback
