@@ -19,8 +19,9 @@ import { CATEGORIES, PRIORITIES, OWNERS } from "@/lib/taxonomy";
 import type { TriageRequest, TriageResponse, TriageResult } from "@/lib/types";
 
 // ── OpenAI client — API key read from env, never hardcoded ───────────────────
+// We use a fallback string during Vercel's build step where env vars may be missing
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY || "dummy_key_for_build",
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
