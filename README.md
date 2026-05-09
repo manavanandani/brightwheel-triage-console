@@ -32,9 +32,9 @@ cd brightwheel-triage
 # 2. Install dependencies
 npm install
 
-# 3. Add your Anthropic API key
+# 3. Add your OpenAI API key
 cp .env.example .env.local
-# Edit .env.local and add: ANTHROPIC_API_KEY=your_key_here
+# Edit .env.local and add: OPENAI_API_KEY=your_key_here
 
 # 4. Run locally
 npm run dev
@@ -50,9 +50,9 @@ Open [http://localhost:3000](http://localhost:3000).
 
 | Variable | Required | Description |
 |---|---|---|
-| `ANTHROPIC_API_KEY` | Yes (for live AI) | Your Anthropic API key. Read server-side only. Never sent to browser. |
+| `OPENAI_API_KEY` | Yes (for live AI) | Your OpenAI API key. Read server-side only. Never exposed to the browser. |
 
-Add this to Vercel's Environment Variables for production deployment.
+Add this to your Vercel Environment Variables for production deployment.
 
 ---
 
@@ -125,7 +125,7 @@ The assignment explicitly calls for a prototype. Introducing a database adds dep
 
 **Why server-side API calls only?**
 
-API keys must never be exposed in client-side JavaScript. The `/api/triage` route runs on the server, reads the key from `process.env`, calls Anthropic, and returns the result. The browser never sees the key.
+API keys must never be exposed in client-side JavaScript. The `/api/triage` route runs entirely on the server, reads the key from `process.env`, calls OpenAI, and returns the result safely.
 
 ---
 
@@ -149,38 +149,11 @@ brightwheel-triage/
 │   ├── types.ts              ← All TypeScript interfaces
 │   ├── taxonomy.ts           ← Categories, priorities, routing rules, colors
 │   ├── triagePrompt.ts       ← LLM prompt builder + fallback
-│   └── sampleMessages.ts    ← 10 placeholder messages (CSV-ready shape)
+│   └── sampleMessages.ts    ← The actual 25 messages from the assignment CSV
 ├── .env.example
 ├── README.md
 └── WRITTEN_SUMMARY.md
 ```
-
----
-
-## CSV Integration (Future)
-
-The sample messages in `lib/sampleMessages.ts` use exactly the same field shape as `bw_onboarding_tickets.csv`:
-
-```typescript
-{
-  message_id: string,
-  received_at: string,   // ISO 8601
-  sender_name: string,
-  sender_email: string,
-  subject: string,
-  body: string,
-}
-```
-
-To swap in the real CSV:
-
-```typescript
-// lib/sampleMessages.ts — replace the array with:
-import { parseBwTicketsCsv } from "./csvParser";
-export const sampleMessages = parseBwTicketsCsv("bw_onboarding_tickets.csv");
-```
-
-See TODO comments in `sampleMessages.ts` and `triagePrompt.ts` for the exact integration points.
 
 ---
 
@@ -194,11 +167,11 @@ npm i -g vercel
 vercel --prod
 ```
 
-1. Go to Vercel dashboard → Project Settings → Environment Variables
-2. Add `ANTHROPIC_API_KEY` with your key
+1. Go to your Vercel dashboard → Project Settings → Environment Variables
+2. Add `OPENAI_API_KEY` with your OpenAI key
 3. Redeploy
 
-The app is fully stateless. No database setup, no migrations, no infrastructure.
+The app is fully stateless. There is no database setup, no migrations, and no infrastructure to manage.
 
 ---
 
@@ -216,9 +189,8 @@ The app is fully stateless. No database setup, no migrations, no infrastructure.
 
 ## How This Becomes Production-Ready
 
-1. **Persistence:** Move message state to a database (Postgres via Supabase or PlanetScale)
-2. **Auth:** Add Brightwheel SSO (Okta, Google Workspace) via NextAuth
-3. **Real ingestion:** Webhook receiver for Zendesk, Intercom, or Gmail API
-4. **Feedback loop:** Specialists can accept/reject/edit triage decisions; use corrections to improve prompt and few-shot examples
-5. **Analytics:** Track triage accuracy, escalation rates, and time saved per week
-6. **CSV integration:** Parse `bw_onboarding_tickets.csv` for batch processing and historical few-shot examples
+1. **Persistence:** Move message state to a database (Postgres via Prisma or Drizzle).
+2. **Auth:** Add Brightwheel SSO (Okta, Google Workspace) via NextAuth so only employees can access the dashboard.
+3. **Real ingestion:** Build a webhook receiver for Zendesk, Intercom, or the Gmail API.
+4. **Feedback loop:** Allow specialists to accept/reject triage decisions to build a high-quality dataset for fine-tuning.
+5. **Analytics:** Track triage accuracy, escalation rates, and specialist time saved per week.
