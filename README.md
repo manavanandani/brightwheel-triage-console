@@ -8,7 +8,7 @@ An AI-powered first-pass triage automation for Brightwheel's onboarding team. Co
 
 Brightwheel's Onboarding team helps newly signed schools go live on the platform within 30 days. Each week, roughly 200 messages arrive from administrators, directors, and teachers. Each message requires a specialist to manually read it and decide: what does this school need, how urgent is it, who should handle it, and whether a standard reply applies.
 
-This console automates that first-pass triage with Claude (Anthropic), reducing per-message processing from 3–5 minutes to near-zero for clear-cut cases.
+This console automates that first-pass triage with OpenAI GPT-4o, reducing per-message processing from 3–5 minutes to near-zero for clear-cut cases.
 
 **The output of each triage:**
 - Category (Setup, Billing, Technical Issue, Urgent Launch Blocker, etc.)
@@ -63,7 +63,7 @@ Add this to Vercel's Environment Variables for production deployment.
 | Framework | Next.js 16 (App Router) |
 | Language | TypeScript |
 | Styling | Tailwind CSS v4 |
-| AI | Anthropic Claude (claude-opus-4-5) |
+| AI | OpenAI GPT-4o |
 | Hosting | Vercel-ready |
 | Database | None |
 | Auth | None |
@@ -82,7 +82,7 @@ Inbound Message
 POST /api/triage (server-side)
      │
      ├── Build system prompt (taxonomy + rules)
-     ├── Call Claude with strict JSON schema
+     ├── Call OpenAI with strict JSON schema
      ├── Parse + validate response
      ├── Enforce business rules (Urgent → human_review, etc.)
      └── Return fallback if parse fails
@@ -115,9 +115,9 @@ POST /api/triage (server-side)
 
 A web interface is the only format that satisfies the live ingestion requirement from the assignment. The reviewer must be able to paste a brand-new, never-seen message and see a triage result instantly — with zero restarts, no CLI knowledge, and no configuration changes. A web form achieves this. A script does not.
 
-**Why Claude (Anthropic) and not GPT?**
+**Why OpenAI GPT-4o?**
 
-Claude produces reliably structured JSON output with less need for extensive prompt hardening. Its instruction-following for strict schema compliance is strong, which matters when the output drives operational decisions.
+GPT-4o produces reliably structured JSON output and its instruction-following for strict schema compliance is incredibly strong, which is vital when the output drives operations.
 
 **Why no database?**
 
@@ -138,7 +138,7 @@ brightwheel-triage/
 │   ├── layout.tsx            ← Root layout with Inter font
 │   ├── globals.css           ← Global design tokens
 │   └── api/triage/
-│       └── route.ts          ← Server-side triage API (Claude call)
+│       └── route.ts          ← Server-side triage API (OpenAI call)
 ├── components/
 │   ├── MetricCard.tsx        ← Dashboard stat card
 │   ├── InboxQueue.tsx        ← Left panel — message queue
@@ -207,7 +207,7 @@ The app is fully stateless. No database setup, no migrations, no infrastructure.
 | Decision | Tradeoff |
 |---|---|
 | In-memory state | No persistence across sessions — acceptable for prototype |
-| Single Claude call per message | Simpler but could benefit from retrieval-augmented few-shot examples |
+| Single OpenAI call per message | Simpler but could benefit from retrieval-augmented few-shot examples |
 | No streaming | Simpler error handling; adds ~2s latency vs. streaming UX |
 | No auth | Fine for internal prototype; required before production |
 | No real email ingestion | Simulated queue is sufficient for demo; Zendesk/Gmail webhook needed in prod |

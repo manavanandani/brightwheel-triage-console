@@ -101,14 +101,12 @@ function buildMockResponse(subject: string, body: string): TriageResult {
   const isBillingDuplicate = text.includes("charged twice") || text.includes("charged $") && text.includes("again");
   const isBillingPlan = text.includes("upgraded plan") || text.includes("premium plan") || text.includes("features not showing");
   const isBillingInvoice = text.includes("invoice") && !text.includes("charged twice");
-  const isBilling = isBillingDuplicate || isBillingPlan || isBillingInvoice || text.includes("billing");
 
   const isTechnicalCrash = text.includes("crashing") || text.includes("crash");
   const isTechnicalVisibility = text.includes("not showing in parent") || text.includes("classroom names");
   const isTechnicalBug = text.includes("check-in feature") || text.includes("feature") && text.includes("not") && text.includes("available");
   const isTechnicalInvite = text.includes("invitation") && (text.includes("spam") || text.includes("expired") || text.includes("not received"));
 
-  const isAccessStaff = text.includes("locked out") || text.includes("password reset") || text.includes("log in") && text.includes("staff");
   const isSetupRoster = text.includes("import") || text.includes("spreadsheet") || text.includes("roster");
   const isSetupNewStaff = text.includes("new teacher") && text.includes("monday");
   const isSetupStaff = text.includes("add teacher") || text.includes("add my teaching") || text.includes("add staff");
